@@ -102,11 +102,22 @@ public class Player {
 				bd.bullet = true;
 
 				Body body = world.createBody(bd);
+				
 
 				PolygonShape shape = new PolygonShape();
-				shape.setAsBox(5 / 32f, 5 / 32f);
-				Fixture fix = body.createFixture(shape, 1);
+				shape.setAsBox(0.5f, 0.25f);
+				Fixture fix = body.createFixture(shape, 100);
+				fix.setFriction(1f);
+				fix.setDensity(20);
 				fix.setUserData("Bullet");
+				
+				
+				
+				PointLight light = new PointLight(Main.rh, 30, null, 15, bd.position.x, bd.position.y);
+				//light.
+				light.setColor(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1f);
+				
+				light.attachToBody(body);
 
 				Vector2 blastDir = bd.position.cpy().sub(new Vector2(x / 32, y / 32));
 				float distance = blastDir.len();
@@ -123,10 +134,7 @@ public class Player {
 			}
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.L)) {
-			PointLight light = new PointLight(Main.rh, 128, null, 32 * 32f, pos.x, pos.y);
-			light.setColor(MathUtils.random(), MathUtils.random(), MathUtils.random(), 0.5f);
 
-			light.setSoft(true);
 		}
 
 		x = (int) body.getPosition().x * 32;

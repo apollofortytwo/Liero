@@ -45,7 +45,7 @@ public class Main extends ApplicationAdapter {
 	World world;
 	Box2DDebugRenderer b2dr;
 	MapManager mm;
-	private int seg = 8;
+	static int seg = 8;
 
 	public static final int SCALE = 32;
 
@@ -76,7 +76,7 @@ public class Main extends ApplicationAdapter {
 			img.getTextureData().prepare();
 		}
 
-		mm = new MapManager(img.getTextureData().consumePixmap());
+		mm = new MapManager(img.getTextureData().consumePixmap(), cam, world);
 
 		player = new Player(32, 0, world);
 		mm.looper(seg);
@@ -86,33 +86,8 @@ public class Main extends ApplicationAdapter {
 	public void update() {
 		cam.position.set(new Vector2(player.x, player.y), 0);
 		Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
+		mm.update();
 
-		try {
-			for (Contact contact : world.getContactList()) {
-				this.bulletCheck(contact);
-				this.fallCheck(contact);
-			}
-		} catch (Exception e) {
-
-		}
-		for(Debris d: debris){
-			d.shorten(debris);
-		}
-		
-
-	}
-
-	private void fallCheck(Contact contact) {
-		if (contact.getFixtureA().getUserData().equals("Falling")) {
-			if (contact.getFixtureB().getUserData().equals("Ground")) {
-				contact.getFixtureA().setUserData("Player");
-			}
-		}
-		if (contact.getFixtureB().getUserData().equals("Falling")) {
-			if (contact.getFixtureA().getUserData().equals("Ground")) {
-				contact.getFixtureB().setUserData("Player");
-			}
-		}
 	}
 
 	@Override
@@ -129,29 +104,9 @@ public class Main extends ApplicationAdapter {
 
 		rh.setCombinedMatrix(matrix);
 		rh.updateAndRender();
-
-		// points.clear();
+		rh.setCulling(false);
 
 		update();
-		mm.currentMap.setColor(Color.WHITE);
-
-		Vector3 pos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-		Circle c = new Circle();
-		c.set(pos.x / SCALE, pos.y / SCALE, 5);
-		sr.setColor(Color.RED);
-
-		sr.circle(c.x, c.y, c.radius);
-		sr.setColor(Color.WHITE);
-		clearStaticBodies();
-
-		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			Vector3 posMap = new Vector3(pos.x / SCALE, pos.y / SCALE, 0);
-			mapFill(posMap);
-		}
-
-		for (Rectangle rect : mm.points) {
-			createGround(rect);
-		}
 
 		world.step(1 / 30f, 6, 6);
 
@@ -159,84 +114,6 @@ public class Main extends ApplicationAdapter {
 
 		sr.end();
 
-	}
-
-	public void clearStaticBodies() {
-		Array<Body> bodies = new Array<Body>();
-		world.getBodies(bodies);
-
-		for (Body body : bodies) {
-			if (body.getType().equals(BodyType.StaticBody)) {
-				world.destroyBody(body);
-			}
-		}
-	}
-
-	ArrayList<Debris> debris = new ArrayList<Debris>();
-	Random rand = new Random();
-
-	public void debris(Rectangle rect, Circle c) {
-		if (rand.nextInt(100) > 75) {
-			debris.add(new Debris(world, rect));
-		}
-
-	}
-
-	public void bulletCheck(Contact contact) {
-
-		Fixture bullet = null;
-		Vector3 pos = new Vector3();
-		if (contact.getFixtureA().getUserData().equals("Bullet")
-				&& !contact.getFixtureA().getUserData().equals("Player")) {
-			bullet = contact.getFixtureA();
-			pos = new Vector3(contact.getFixtureA().getBody().getPosition(), 0);
-
-		}
-
-		if (contact.getFixtureB().getUserData().equals("Bullet")
-				&& !contact.getFixtureA().getUserData().equals("Player")) {
-			bullet = contact.getFixtureB();
-			pos = new Vector3(contact.getFixtureB().getBody().getPosition(), 0);
-
-		}
-
-		if (bullet != null) {
-			mapFill(pos);
-			world.destroyBody(bullet.getBody());
-		}
-	}
-
-	public void mapFill(Vector3 pos) {
-		ArrayList<Rectangle> toRemove = new ArrayList<Rectangle>();
-
-		mm.currentMap.fillCircle((int) pos.x, (int) pos.y, 10);
-
-		Circle c = new Circle();
-		c.set(pos.x, pos.y, 10);
-
-		for (Rectangle rect : mm.points) {
-			if (Intersector.overlaps(c, rect)) {
-				toRemove.add(rect);
-				this.debris(rect, c);
-			}
-		}
-		mm.points.removeAll(toRemove);
-
-		mm.looper(seg);
-		Explosion.explode(40, 10f, 3200f, c.x, c.y);
-
-	}
-
-	public void createGround(Rectangle rect) {
-		BodyDef bd = new BodyDef();
-		bd.position.set(rect.x + rect.getWidth() / 2, rect.y + rect.getHeight() / 2);
-
-		bd.type = BodyDef.BodyType.StaticBody;
-		Body body = world.createBody(bd);
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(rect.width / 2, rect.height / 2);
-		Fixture fix = body.createFixture(shape, 0);
-		fix.setUserData("Ground");
 	}
 
 }

@@ -1,15 +1,18 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Explosion {
-
+	static ArrayList<LightExplosion> lightEList = new ArrayList<LightExplosion>();
+	
 	static World world;
 
 	public static void explode(final int numRays, float blastRadius, final float blastPower, float posX, float posY) {
@@ -47,6 +50,17 @@ public class Explosion {
 
 		body.applyLinearImpulse(body.getLinearVelocity(), applyPoint, true);
 
+	}
+
+	public static void update(){
+		for(LightExplosion le : lightEList){
+			le.update();
+			
+		}
+	}
+	
+	public static void drawExplosion(Circle c) {
+		lightEList.add(new LightExplosion(c.x,c.y,c.radius));
 	}
 
 }
