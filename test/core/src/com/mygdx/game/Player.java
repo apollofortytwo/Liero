@@ -35,10 +35,14 @@ public class Player {
 		bd = new BodyDef();
 		bd.position.set(x, y);
 		bd.type = BodyType.DynamicBody;
+	
 
 		body = world.createBody(bd);
 		fixture = body.createFixture(shape, 10);
 		fixture.setUserData("Player");
+		fixture.setFriction(10.0f);
+		body.setGravityScale(10f);
+		
 		body.setFixedRotation(true);
 	}
 
@@ -98,26 +102,8 @@ public class Player {
 		if (Gdx.input.isTouched()) {
 			if (cooldown <= 0) {
 				cooldown = 0.1f;
-				bd.type = BodyDef.BodyType.DynamicBody;
-				bd.bullet = true;
-
-				Body body = world.createBody(bd);
-				
-
-				PolygonShape shape = new PolygonShape();
-				shape.setAsBox(0.5f, 0.25f);
-				Fixture fix = body.createFixture(shape, 100);
-				fix.setFriction(1f);
-				fix.setDensity(20);
-				fix.setUserData("Bullet");
-				
-				
-				
-				PointLight light = new PointLight(Main.rh, 30, null, 15, bd.position.x, bd.position.y);
-				//light.
-				light.setColor(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1f);
-				
-				light.attachToBody(body);
+				Bullet bullet  = new Bullet(bd, world);
+				Box2dMap.bulletList.add(bullet);
 
 				Vector2 blastDir = bd.position.cpy().sub(new Vector2(x / 32, y / 32));
 				float distance = blastDir.len();
@@ -127,14 +113,12 @@ public class Player {
 				float invDistance = 1f / distance;
 				float blastPower = 320000f;
 				float impulseMag = Math.min(blastPower * invDistance, blastPower * 0.5f);
-				body.setLinearVelocity(blastDir.nor().scl(impulseMag));
-				body.setGravityScale(0);
-				body.applyLinearImpulse(body.getLinearVelocity(), new Vector2(x / 32, y / 32), false);
-
+				bullet.body.setLinearVelocity(blastDir.nor().scl(impulseMag));
+				bullet.body.applyLinearImpulse(body.getLinearVelocity(), new Vector2(x / 32, y / 32), true);
 			}
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.L)) {
-
+			
 		}
 
 		x = (int) body.getPosition().x * 32;

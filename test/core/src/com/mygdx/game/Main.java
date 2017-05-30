@@ -54,7 +54,7 @@ public class Main extends ApplicationAdapter {
 
 		Box2D.init();
 		Bullet.init();
-		world = new World(new Vector2(0, 900f), true);
+		world = new World(new Vector2(0, 9.81f), true);
 		b2dr = new Box2DDebugRenderer();
 		rh = new RayHandler(world);
 

@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class Box2dMap {
-
+	public static ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
 	MapManager mm;
 	World world;
 
@@ -25,23 +25,20 @@ public class Box2dMap {
 		this.world = world;
 
 	}
-	
-	public void update(){
+
+	public void update() {
 
 		collisionDetection();
-		for(Debris d: debris){
+		for (Debris d : debris) {
 			d.shorten(debris);
 		}
 		Explosion.update();
 	}
-	
-	
-	
-	public void collisionDetection(){
+
+	public void collisionDetection() {
 		try {
 			for (Contact contact : world.getContactList()) {
 				bulletCheck(contact);
-				fallCheck(contact);
 			}
 		} catch (Exception e) {
 
@@ -56,7 +53,6 @@ public class Box2dMap {
 				&& !contact.getFixtureA().getUserData().equals("Player")) {
 			bullet = contact.getFixtureA();
 			pos = new Vector3(contact.getFixtureA().getBody().getPosition(), 0);
-
 		}
 
 		if (contact.getFixtureB().getUserData().equals("Bullet")
@@ -69,19 +65,12 @@ public class Box2dMap {
 		if (bullet != null) {
 			mm.mapFill(pos);
 			world.destroyBody(bullet.getBody());
-		}
-	}
-	
-	
-	void fallCheck(Contact contact) {
-		if (contact.getFixtureA().getUserData().equals("Falling")) {
-			if (contact.getFixtureB().getUserData().equals("Ground")) {
-				contact.getFixtureA().setUserData("Player");
-			}
-		}
-		if (contact.getFixtureB().getUserData().equals("Falling")) {
-			if (contact.getFixtureA().getUserData().equals("Ground")) {
-				contact.getFixtureB().setUserData("Player");
+			for(Bullet temp: bulletList){
+				if(temp.body.equals(bullet.getBody())){
+					temp.removeFlare();
+					bulletList.remove(temp);
+					
+				}
 			}
 		}
 	}
