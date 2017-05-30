@@ -29,8 +29,9 @@ public class Debris {
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(10 / 32f, 10 / 32f);
 		Fixture fix = body.createFixture(shape, 1);
-		
-		
+		Filter filter = new Filter();
+		filter.groupIndex = -2;
+		fix.setFilterData(filter);
 		fix.setUserData("Debris");
 	}
 

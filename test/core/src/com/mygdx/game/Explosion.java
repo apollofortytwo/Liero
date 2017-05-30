@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Explosion {
 	static ArrayList<LightExplosion> lightEList = new ArrayList<LightExplosion>();
-	
+
 	static World world;
 
 	public static void explode(final int numRays, float blastRadius, final float blastPower, float posX, float posY) {
@@ -30,6 +30,7 @@ public class Explosion {
 				public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 
 					applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) numRays);
+
 					return 0;
 				}
 			};
@@ -52,15 +53,15 @@ public class Explosion {
 
 	}
 
-	public static void update(){
-		for(LightExplosion le : lightEList){
+	public static void update() {
+		for (LightExplosion le : lightEList) {
 			le.update();
-			
+
 		}
 	}
-	
+
 	public static void drawExplosion(Circle c) {
-		lightEList.add(new LightExplosion(c.x,c.y,c.radius));
+		lightEList.add(new LightExplosion(c.x, c.y, c.radius));
 	}
 
 }

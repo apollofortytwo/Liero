@@ -35,14 +35,13 @@ public class Player {
 		bd = new BodyDef();
 		bd.position.set(x, y);
 		bd.type = BodyType.DynamicBody;
-	
 
 		body = world.createBody(bd);
 		fixture = body.createFixture(shape, 10);
 		fixture.setUserData("Player");
 		fixture.setFriction(10.0f);
 		body.setGravityScale(10f);
-		
+
 		body.setFixedRotation(true);
 	}
 
@@ -94,15 +93,14 @@ public class Player {
 		bd.position.set(dx + (x / 32), dy + (y / 32));
 		bd.bullet = true;
 
-		Main.sr.begin();
 		Main.sr.line(new Vector2(x / 32, y / 32), bd.position);
-		Main.sr.end();
+
 		cooldown -= Gdx.graphics.getDeltaTime();
 
 		if (Gdx.input.isTouched()) {
 			if (cooldown <= 0) {
 				cooldown = 0.1f;
-				Bullet bullet  = new Bullet(bd, world);
+				Bullet bullet = new Bullet(bd, world);
 				Box2dMap.bulletList.add(bullet);
 
 				Vector2 blastDir = bd.position.cpy().sub(new Vector2(x / 32, y / 32));
@@ -115,10 +113,13 @@ public class Player {
 				float impulseMag = Math.min(blastPower * invDistance, blastPower * 0.5f);
 				bullet.body.setLinearVelocity(blastDir.nor().scl(impulseMag));
 				bullet.body.applyLinearImpulse(body.getLinearVelocity(), new Vector2(x / 32, y / 32), true);
+
+				Main.sendBullet(bullet, x, y);
+
 			}
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.L)) {
-			
+
 		}
 
 		x = (int) body.getPosition().x * 32;

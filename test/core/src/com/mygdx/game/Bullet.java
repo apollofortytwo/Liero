@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -29,6 +30,9 @@ public class Bullet {
 		shape.setAsBox(0.5f, 0.25f);
 		Fixture fix = body.createFixture(shape, 1);
 		fix.setUserData("Bullet");
+		Filter filter = new Filter();
+		filter.groupIndex = -2;
+		fix.setFilterData(filter);
 		addFlare();
 	}
 
