@@ -16,6 +16,9 @@ public class Network {
 		kryo.register(Bullet.class);
 		kryo.register(IdentificationNumber.class);
 		kryo.register(HasDisconnected.class);
+		kryo.register(float[][].class);
+		kryo.register(float[].class);
+		kryo.register(Map.class);
 		
 		return kryo;
 	}
@@ -44,6 +47,11 @@ public class Network {
 		int xPos, yPos;
 		int x, y;
 		int xforce, yforce;
+		
+	}
+	
+	public static class Map{
+		float[][] map;
 		
 	}
 	

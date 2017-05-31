@@ -64,7 +64,7 @@ public class Box2dMap {
 
 		if (bullet != null) {
 			mm.mapFill(pos);
-			world.destroyBody(bullet.getBody());
+			
 			for(Bullet temp: bulletList){
 				if(temp.body.equals(bullet.getBody())){
 					temp.removeFlare();
@@ -72,6 +72,7 @@ public class Box2dMap {
 					
 				}
 			}
+			//world.destroyBody(bullet.getBody());
 		}
 	}
 

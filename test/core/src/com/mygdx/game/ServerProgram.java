@@ -15,7 +15,7 @@ public class ServerProgram {
 
 	public ServerProgram() throws IOException {
 		System.out.println("Creating the server...");
-		server = new Server();
+		server = new Server(20000000,4000000);
 
 		Network.register(server);
 		server.addListener(new Listener() {
@@ -59,6 +59,10 @@ public class ServerProgram {
 					Network.Bullet bullet = (Network.Bullet) object;
 
 					server.sendToAllExceptTCP(c.getID(), bullet);
+				}else if (object instanceof Network.Map) {
+					Network.Map map = (Network.Map) object;
+
+					server.sendToAllExceptTCP(c.getID(), map);
 				}
 
 			}

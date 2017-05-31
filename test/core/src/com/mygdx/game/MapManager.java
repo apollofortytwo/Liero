@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class MapManager {
 	Box2dMap b2dMap;
-	Pixmap currentMap;
+	public static Pixmap currentMap;
 	public ArrayList<Rectangle> points = new ArrayList<Rectangle>();
 	OrthographicCamera cam;
 	World world;
@@ -61,7 +61,7 @@ public class MapManager {
 	}
 
 	public void looper(int seg) {
-		looper(new Rectangle(0, 0, this.currentMap.getWidth(), this.currentMap.getHeight()), seg);
+		looper(new Rectangle(0, 0, MapManager.currentMap.getWidth(), MapManager.currentMap.getHeight()), seg);
 	}
 
 	public void looper(Rectangle rect, int seg) {
