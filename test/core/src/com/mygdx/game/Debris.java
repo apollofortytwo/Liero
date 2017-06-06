@@ -38,7 +38,9 @@ public class Debris {
 	public void shorten(ArrayList<Debris> debris){
 		lifeSpan -= Gdx.graphics.getDeltaTime();
 		if(lifeSpan <= 0){
-			world.destroyBody(body);
+			if(!world.isLocked()){
+				world.destroyBody(body);
+			}
 		}
 		
 	}

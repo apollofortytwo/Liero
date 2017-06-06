@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Circle;
@@ -64,15 +65,16 @@ public class Box2dMap {
 
 		if (bullet != null) {
 			mm.mapFill(pos);
-			
-			for(Bullet temp: bulletList){
-				if(temp.body.equals(bullet.getBody())){
+			if(!world.isLocked()){
+				world.destroyBody(bullet.getBody());
+			}
+			for (Bullet temp : bulletList) {
+				if (temp.body.equals(bullet.getBody())) {
 					temp.removeFlare();
 					bulletList.remove(temp);
-					
+					return;
 				}
 			}
-			//world.destroyBody(bullet.getBody());
 		}
 	}
 
@@ -90,11 +92,18 @@ public class Box2dMap {
 		Array<Body> bodies = new Array<Body>();
 		world.getBodies(bodies);
 
-		for (Body body : bodies) {
-			if (body.getType().equals(BodyType.StaticBody)) {
-				world.destroyBody(body);
+		for (Iterator<Body> iter = bodies.iterator(); iter.hasNext();) {
+			Body body = iter.next();
+			if (body != null) {
+
+				if (body.getType().equals(BodyType.StaticBody)) {
+					if(!world.isLocked()){
+						world.destroyBody(body);
+					}
+				}
 			}
 		}
+
 	}
 
 	public void createGround(Rectangle rect) {

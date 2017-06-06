@@ -36,11 +36,21 @@ public class Main extends ApplicationAdapter {
 
 	public static final int SCALE = 32;
 
+	
+	
+	
+	
 	@Override
 	public void create() {
 
 		Box2D.init();
 		Bullet.init();
+
+		try {
+			cp = new ClientProgram();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		world = new World(new Vector2(0, 9.81f), true);
 		b2dr = new Box2DDebugRenderer();
@@ -68,27 +78,19 @@ public class Main extends ApplicationAdapter {
 
 		player = new Player(64, 0, world);
 
-		mm.looper(seg);
-		Explosion.world = world;
-		
-		try {
-			cp = new ClientProgram(mm);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		cp.sendMyCharacter(player);
 
+		mm.looper(seg);
+		Explosion.world = world;
 	}
 
 	public void update() {
-		
 		cam.position.set(new Vector2(player.x, player.y), 0);
 		Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
 		mm.update();
 		player.update();
 		cp.updateCharacterPosition(player.body.getPosition());
-		cp.sendMyMap(MapManager.currentMap);
+
 	}
 
 	@Override
@@ -115,12 +117,11 @@ public class Main extends ApplicationAdapter {
 
 		update();
 
+		world.step(1 / 30f, 6, 6);
 
 		b2dr.render(world, matrix);
 
 		sr.end();
-		
-		world.step(1 / 60f, 12, 6);
 
 	}
 
@@ -141,8 +142,6 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public static void recieveBullet(Network.Bullet bullet) {
-
-		System.out.println("Adding bullet to the physical world");
 		BodyDef bd = new BodyDef();
 		bd.position.x = bullet.xPos;
 		bd.position.y = bullet.yPos;
