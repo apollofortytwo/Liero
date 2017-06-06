@@ -11,13 +11,18 @@ import com.badlogic.gdx.physics.box2d.World;
 import box2dLight.PointLight;
 
 public class Bullet {
+	public static int bulletsShot = 0;
+	
 	World world;
+	int index;
 	Body body;
 	BodyDef bd;
 	Fixture fix;
 	PointLight light;
 
 	Bullet(BodyDef bd, World world) {
+		Bullet.bulletsShot++;
+		index = Bullet.bulletsShot;
 		this.world = world;
 		this.bd = bd;
 

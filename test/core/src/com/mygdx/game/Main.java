@@ -47,7 +47,7 @@ public class Main extends ApplicationAdapter {
 		Bullet.init();
 
 		try {
-			cp = new ClientProgram();
+			cp = new ClientProgram(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -109,6 +109,11 @@ public class Main extends ApplicationAdapter {
 			sr.rect((character.x - 2), character.y - 2, 4, 4);
 		}
 
+		
+		for(Network.Bullet bullet: cp.bulletList){
+			sr.setColor(Color.GREEN);
+			sr.rect(bullet.x, bullet.y, 0.5f, 0.25f);
+		}
 		rh.setCombinedMatrix(matrix);
 		rh.updateAndRender();
 		rh.setCulling(false);
@@ -117,7 +122,7 @@ public class Main extends ApplicationAdapter {
 
 		update();
 
-		world.step(1 / 30f, 6, 6);
+		world.step(1 / 60f, 12, 12);
 
 		b2dr.render(world, matrix);
 
@@ -126,32 +131,18 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public static void sendBullet(com.mygdx.game.Bullet bt, int x, int y) {
-
 		Network.Bullet bullet = new Network.Bullet();
-		bullet.xPos = (int) bt.body.getPosition().x;
-		bullet.yPos = (int) bt.body.getPosition().y;
-
 		bullet.x = x;
 		bullet.y = y;
-
-		bullet.xforce = (int) bt.body.getLinearVelocity().x;
-		bullet.yforce = (int) bt.body.getLinearVelocity().y;
-
+		bullet.id = cp.id;
+		bullet.index = bt.index;
 		cp.sendBullet(bullet);
-
 	}
+	
+	
 
 	public static void recieveBullet(Network.Bullet bullet) {
-		BodyDef bd = new BodyDef();
-		bd.position.x = bullet.xPos;
-		bd.position.y = bullet.yPos;
 
-		com.mygdx.game.Bullet bt = new com.mygdx.game.Bullet(bd, world);
-
-		bt.body.applyLinearImpulse(new Vector2(bullet.xforce, bullet.yforce), new Vector2(bullet.x / 32, bullet.y / 32),
-				true);
-
-		Box2dMap.bulletList.add(bt);
 
 	}
 

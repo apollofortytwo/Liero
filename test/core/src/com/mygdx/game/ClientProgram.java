@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -19,8 +20,9 @@ public class ClientProgram extends Listener {
 	public ArrayList<Network.Character> characterList = new ArrayList<Network.Character>();
 	public ArrayList<Network.Bullet> bulletList = new ArrayList<Network.Bullet>();
 	
-
-	ClientProgram() throws IOException {
+	Main main;
+	ClientProgram(Main main) throws IOException {
+		this.main = main;
 		client = new Client();
 		client.start();
 
@@ -54,7 +56,16 @@ public class ClientProgram extends Listener {
 		} else if (object instanceof Network.Bullet) {
 			Network.Bullet bullet = (Network.Bullet) object;
 			bulletList.add(bullet);
-			Main.recieveBullet(bullet);
+			
+		}else if (object instanceof Network.BulletDead) {
+			Network.BulletDead bulletDead = (Network.BulletDead) object;
+			for(Network.Bullet bullet: bulletList){
+				if(bullet.id == bulletDead.id){
+					bulletList.remove(bullet);
+					main.mm.mapFill(new Vector3(bullet.x,bullet.y,0));
+					return;
+				}
+			}
 			
 		} else if (object instanceof Network.Message) {
 			Network.Message message = (Network.Message) object;
@@ -96,7 +107,6 @@ public class ClientProgram extends Listener {
 	}
 	
 	public void sendBullet(Network.Bullet bullet){
-		bullet.id = id;
 		client.sendTCP(bullet);
 	}
 

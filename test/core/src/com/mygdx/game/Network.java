@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.EndPoint;
 public class Network {
 
 	static int udpPort = 27962, tcpPort = 27962;
-	static String ip = "192.168.43.25";
+	static String ip = "192.168.0.20";
 	
 	public static Kryo register(EndPoint endPoint){
 		Kryo kryo = endPoint.getKryo();
@@ -16,6 +16,8 @@ public class Network {
 		kryo.register(Bullet.class);
 		kryo.register(IdentificationNumber.class);
 		kryo.register(HasDisconnected.class);
+		kryo.register(BulletDead.class);
+		kryo.register(BulletMove.class);
 		
 		return kryo;
 	}
@@ -33,6 +35,10 @@ public class Network {
 		int x, y;
 	}
 	
+	public static class BulletDead{
+		int id, index;
+	}
+	
 	public static class Character{
 		int id;
 		int x,y;
@@ -41,9 +47,14 @@ public class Network {
 	
 	public static class Bullet{
 		int id;
-		int xPos, yPos;
 		int x, y;
-		int xforce, yforce;
+		int index;
+	}
+	
+	public static class BulletMove{
+		int id;
+		int x, y;
+		int index;
 		
 	}
 	

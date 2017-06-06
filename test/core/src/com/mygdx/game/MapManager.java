@@ -76,8 +76,7 @@ public class MapManager {
 		} else if (seg > 0) {
 			looper(new Rectangle(rect.x, rect.y, rect.width / 2, rect.height / 2), seg - 1);
 			looper(new Rectangle(rect.x + (rect.width / 2), rect.y, rect.width / 2, rect.height / 2), seg - 1);
-			looper(new Rectangle(rect.x + (rect.width / 2), rect.y + (rect.height / 2), rect.width / 2,
-					rect.height / 2), seg - 1);
+			looper(new Rectangle(rect.x + (rect.width / 2), rect.y + (rect.height / 2), rect.width / 2, rect.height / 2), seg - 1);
 			looper(new Rectangle(rect.x, rect.y + (rect.height / 2), rect.width / 2, rect.height / 2), seg - 1);
 		}
 
@@ -103,7 +102,7 @@ public class MapManager {
 	public void mapFill(Vector3 pos) {
 		ArrayList<Rectangle> toRemove = new ArrayList<Rectangle>();
 
-		this.currentMap.fillCircle((int) pos.x, (int) pos.y, 10);
+		MapManager.currentMap.fillCircle((int) pos.x, (int) pos.y, 10);
 
 		Circle c = new Circle();
 		c.set(pos.x, pos.y, 10);

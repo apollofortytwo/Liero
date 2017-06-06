@@ -30,12 +30,13 @@ public class ServerProgram {
 				server.sendToTCP(connection.getID(), id);
 
 				for (Network.Character character : characterList) {
-						server.sendToTCP(connection.getID(), character);
+					server.sendToTCP(connection.getID(), character);
 				}
 			}
 
 			public void received(Connection c, Object object) {
-				//System.out.println("Client" + c.getID() + " has sent a object");
+				// System.out.println("Client" + c.getID() + " has sent a
+				// object");
 				if (object instanceof Network.CharacterMove) {
 
 					Network.CharacterMove cm = (Network.CharacterMove) object;
@@ -44,20 +45,21 @@ public class ServerProgram {
 						if (character.id == c.getID()) {
 							character.x = cm.x;
 							character.y = cm.y;
-							//System.out.println(new Vector2(cm.x, cm.y));
-							
 							server.sendToAllExceptTCP(c.getID(), cm);
 						}
 					}
 				} else if (object instanceof Network.Character) {
 					Network.Character character = (Network.Character) object;
-					System.out.println("Character has been added from user:" + character.id + " | Position: " 
+					System.out.println("Character has been added from user:" + character.id + " | Position: "
 							+ character.x + ", " + character.y);
 					characterList.add(character);
 					server.sendToAllExceptTCP(c.getID(), character);
 				} else if (object instanceof Network.Bullet) {
 					Network.Bullet bullet = (Network.Bullet) object;
-
+					server.sendToAllExceptTCP(c.getID(), bullet);
+					
+				} else if (object instanceof Network.BulletDead) {
+					Network.BulletDead bullet = (Network.BulletDead) object;
 					server.sendToAllExceptTCP(c.getID(), bullet);
 				}
 

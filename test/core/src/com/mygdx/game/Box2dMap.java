@@ -47,25 +47,27 @@ public class Box2dMap {
 	}
 
 	public void bulletCheck(Contact contact) {
-
 		Fixture bullet = null;
 		Vector3 pos = new Vector3();
-		if (contact.getFixtureA().getUserData().equals("Bullet")
-				&& !contact.getFixtureA().getUserData().equals("Player")) {
+		if (contact.getFixtureA().getUserData().equals("Bullet")) {
+			if(contact.getFixtureB().getUserData().equals("Player")){
+				System.out.println("Contact with player");
+			}
 			bullet = contact.getFixtureA();
 			pos = new Vector3(contact.getFixtureA().getBody().getPosition(), 0);
 		}
-
-		if (contact.getFixtureB().getUserData().equals("Bullet")
-				&& !contact.getFixtureA().getUserData().equals("Player")) {
+		if (contact.getFixtureB().getUserData().equals("Bullet")) {
+			if(contact.getFixtureA().getUserData().equals("Player")){
+				System.out.println("Contact with player");
+			}
 			bullet = contact.getFixtureB();
 			pos = new Vector3(contact.getFixtureB().getBody().getPosition(), 0);
-
 		}
 
 		if (bullet != null) {
+			
 			mm.mapFill(pos);
-			if(!world.isLocked()){
+			if (!world.isLocked()) {
 				world.destroyBody(bullet.getBody());
 			}
 			for (Bullet temp : bulletList) {
@@ -97,7 +99,7 @@ public class Box2dMap {
 			if (body != null) {
 
 				if (body.getType().equals(BodyType.StaticBody)) {
-					if(!world.isLocked()){
+					if (!world.isLocked()) {
 						world.destroyBody(body);
 					}
 				}
