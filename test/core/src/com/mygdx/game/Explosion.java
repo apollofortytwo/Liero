@@ -28,8 +28,9 @@ public class Explosion {
 			RayCastCallback callback = new RayCastCallback() {
 				@Override
 				public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-
-					applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) numRays);
+					if (!((UserData)(fixture.getBody().getUserData())).name.equals("Bullet")) {
+						applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) numRays);
+					}
 
 					return 0;
 				}

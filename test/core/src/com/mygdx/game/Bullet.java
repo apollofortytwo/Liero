@@ -34,7 +34,10 @@ public class Bullet {
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(0.5f, 0.25f);
 		Fixture fix = body.createFixture(shape, 1);
-		fix.setUserData("Bullet");
+		UserData ud = new UserData();
+		ud.name = "Bullet";
+		ud.toDelete = false;
+		body.setUserData(ud);
 		Filter filter = new Filter();
 		filter.groupIndex = -2;
 		fix.setFilterData(filter);

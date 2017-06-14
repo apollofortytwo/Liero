@@ -58,9 +58,6 @@ public class ServerProgram {
 					Network.Bullet bullet = (Network.Bullet) object;
 					server.sendToAllExceptTCP(c.getID(), bullet);
 					
-				} else if (object instanceof Network.BulletDead) {
-					Network.BulletDead bullet = (Network.BulletDead) object;
-					server.sendToAllExceptTCP(c.getID(), bullet);
 				}
 
 			}
@@ -77,4 +74,8 @@ public class ServerProgram {
 		server.start();
 
 	}
+	public static void main (String[] args) throws IOException {
+		new ServerProgram();
+	}
+	
 }

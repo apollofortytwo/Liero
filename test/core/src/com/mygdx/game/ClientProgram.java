@@ -56,16 +56,7 @@ public class ClientProgram extends Listener {
 		} else if (object instanceof Network.Bullet) {
 			Network.Bullet bullet = (Network.Bullet) object;
 			bulletList.add(bullet);
-			
-		}else if (object instanceof Network.BulletDead) {
-			Network.BulletDead bulletDead = (Network.BulletDead) object;
-			for(Network.Bullet bullet: bulletList){
-				if(bullet.id == bulletDead.id){
-					bulletList.remove(bullet);
-					main.mm.mapFill(new Vector3(bullet.x,bullet.y,0));
-					return;
-				}
-			}
+			Main.recieveBullet(bullet);
 			
 		} else if (object instanceof Network.Message) {
 			Network.Message message = (Network.Message) object;
@@ -93,9 +84,6 @@ public class ClientProgram extends Listener {
 
 	}
 	
-	public void update(){
-		
-	}
 	
 	public void sendMyCharacter(Player player){
 		Network.Character character = new Network.Character();

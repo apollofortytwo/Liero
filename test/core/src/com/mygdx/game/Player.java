@@ -25,6 +25,7 @@ public class Player {
 	PolygonShape shape = new PolygonShape();
 	Fixture fixture;
 	World world;
+	float speed = 25;
 
 	Player(int x, int y, World world) {
 		this.x = x;
@@ -38,23 +39,22 @@ public class Player {
 
 		body = world.createBody(bd);
 		fixture = body.createFixture(shape, 10);
-		fixture.setUserData("Player");
+		UserData ud = new UserData();
+		ud.name = "Player";
+		body.setUserData(ud);
 		fixture.setFriction(10.0f);
 		body.setGravityScale(10f);
 
 		body.setFixedRotation(true);
 	}
 
-	public void render(ShapeRenderer sr) {
-
-	}
 
 	float cooldown = 0;
 
 	public void update() {
 		if (Gdx.input.isKeyPressed(Keys.W)) {
 			Vector2 vel = body.getLinearVelocity();
-			vel.y = -50;
+			vel.y = -speed;
 			body.setLinearVelocity(vel);
 			body.applyLinearImpulse(body.getLinearVelocity(), body.getPosition(), true);
 
@@ -62,14 +62,14 @@ public class Player {
 
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			Vector2 vel = body.getLinearVelocity();
-			vel.x = -50;
+			vel.x = -speed;
 			body.setLinearVelocity(vel);
 			body.applyLinearImpulse(body.getLinearVelocity(), body.getPosition(), true);
 
 		}
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			Vector2 vel = body.getLinearVelocity();
-			vel.x = 50;
+			vel.x = speed;
 			body.setLinearVelocity(vel);
 			body.applyLinearImpulse(body.getLinearVelocity(), body.getPosition(), true);
 		}

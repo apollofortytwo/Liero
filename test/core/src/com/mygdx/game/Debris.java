@@ -12,19 +12,19 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Debris {
-	
+
 	float lifeSpan = 5;
 	Body body;
 	World world;
-	
+
 	Debris(World world, Rectangle rect) {
 		this.world = world;
 		BodyDef bd = new BodyDef();
-	
+
 		bd.position.set(rect.x + rect.getWidth() / 2, rect.y + rect.getHeight() / 2);
-		
+
 		bd.type = BodyDef.BodyType.DynamicBody;
-		
+
 		body = world.createBody(bd);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(10 / 32f, 10 / 32f);
@@ -32,16 +32,18 @@ public class Debris {
 		Filter filter = new Filter();
 		filter.groupIndex = -2;
 		fix.setFilterData(filter);
-		fix.setUserData("Debris");
+		UserData ud = new UserData();
+		ud.name = "Debris";
+		body.setUserData(ud);
 	}
 
-	public void shorten(ArrayList<Debris> debris){
+	public void shorten(ArrayList<Debris> debris) {
 		lifeSpan -= Gdx.graphics.getDeltaTime();
-		if(lifeSpan <= 0){
-			if(!world.isLocked()){
-				world.destroyBody(body);
+		if (lifeSpan <= 0) {
+			if (body.getUserData() != null) {
+				((UserData) body.getUserData()).toDelete = true;
+
 			}
 		}
-		
 	}
 }

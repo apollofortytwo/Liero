@@ -41,42 +41,33 @@ public class Box2dMap {
 			for (Contact contact : world.getContactList()) {
 				bulletCheck(contact);
 			}
+
 		} catch (Exception e) {
 
 		}
+
 	}
 
 	public void bulletCheck(Contact contact) {
 		Fixture bullet = null;
 		Vector3 pos = new Vector3();
-		if (contact.getFixtureA().getUserData().equals("Bullet")) {
-			if(contact.getFixtureB().getUserData().equals("Player")){
-				System.out.println("Contact with player");
-			}
+		if (((UserData) contact.getFixtureA().getBody().getUserData()).name.equals("Bullet")) {
 			bullet = contact.getFixtureA();
 			pos = new Vector3(contact.getFixtureA().getBody().getPosition(), 0);
 		}
-		if (contact.getFixtureB().getUserData().equals("Bullet")) {
-			if(contact.getFixtureA().getUserData().equals("Player")){
-				System.out.println("Contact with player");
-			}
+		if (((UserData) contact.getFixtureB().getBody().getUserData()).name.equals("Bullet")) {
 			bullet = contact.getFixtureB();
 			pos = new Vector3(contact.getFixtureB().getBody().getPosition(), 0);
 		}
+		explodeAndRemoveBullet(bullet);
 
+	}
+
+	public void explodeAndRemoveBullet(Fixture bullet) {
 		if (bullet != null) {
+			mm.mapFill(new Vector3(bullet.getBody().getPosition().x, bullet.getBody().getPosition().y, 0));
+			((UserData) bullet.getBody().getUserData()).toDelete = true;
 			
-			mm.mapFill(pos);
-			if (!world.isLocked()) {
-				world.destroyBody(bullet.getBody());
-			}
-			for (Bullet temp : bulletList) {
-				if (temp.body.equals(bullet.getBody())) {
-					temp.removeFlare();
-					bulletList.remove(temp);
-					return;
-				}
-			}
 		}
 	}
 
@@ -97,11 +88,8 @@ public class Box2dMap {
 		for (Iterator<Body> iter = bodies.iterator(); iter.hasNext();) {
 			Body body = iter.next();
 			if (body != null) {
-
 				if (body.getType().equals(BodyType.StaticBody)) {
-					if (!world.isLocked()) {
-						world.destroyBody(body);
-					}
+					((UserData) body.getUserData()).toDelete = true;
 				}
 			}
 		}
@@ -117,6 +105,8 @@ public class Box2dMap {
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(rect.width / 2, rect.height / 2);
 		Fixture fix = body.createFixture(shape, 0);
-		fix.setUserData("Ground");
+		UserData ud = new UserData();
+		ud.name = "Ground";
+		body.setUserData(ud);
 	}
 }

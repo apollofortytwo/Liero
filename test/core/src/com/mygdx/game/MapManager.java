@@ -47,7 +47,7 @@ public class MapManager {
 		c.set(pos.x / Main.SCALE, pos.y / Main.SCALE, 5);
 
 		b2dMap.clearStaticBodies();
-
+	
 		for (Rectangle rect : points) {
 			b2dMap.createGround(rect);
 		}
@@ -61,7 +61,7 @@ public class MapManager {
 	}
 
 	public void looper(int seg) {
-		looper(new Rectangle(0, 0, MapManager.currentMap.getWidth(), MapManager.currentMap.getHeight()), seg);
+		looper(new Rectangle(0, 0, MapManager.currentMap.getWidth()/2, MapManager.currentMap.getHeight()), seg);
 	}
 
 	public void looper(Rectangle rect, int seg) {
