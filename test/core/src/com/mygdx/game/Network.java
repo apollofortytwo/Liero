@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.EndPoint;
 public class Network {
 
 	static int udpPort = 27962, tcpPort = 27962;
-	public static String ip = "192.168.0.20";
+	public static String ip = "";
 	
 	public static Kryo register(EndPoint endPoint){
 		Kryo kryo = endPoint.getKryo();
