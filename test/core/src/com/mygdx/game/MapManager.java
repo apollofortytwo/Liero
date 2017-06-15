@@ -1,41 +1,33 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 public class MapManager {
 	Box2dMap b2dMap;
 	public static Pixmap currentMap;
 	public ArrayList<Rectangle> points = new ArrayList<Rectangle>();
 	OrthographicCamera cam;
-	World world;
 	
 	MapManager(Pixmap map, OrthographicCamera cam, World world) {
 		currentMap = map;
 		this.cam = cam;
 		b2dMap = new Box2dMap(this,world);
-		
-		
-		
+	
 	}
+	
+
 	
 	public void update(){
 
@@ -59,9 +51,13 @@ public class MapManager {
 		
 
 	}
+	
+	public void render(ShapeRenderer sr){
+		b2dMap.render(sr);
+	}
 
 	public void looper(int seg) {
-		looper(new Rectangle(0, 0, MapManager.currentMap.getWidth()/2, MapManager.currentMap.getHeight()), seg);
+		looper(new Rectangle(0, 0, MapManager.currentMap.getWidth(), MapManager.currentMap.getHeight()), seg);
 	}
 
 	public void looper(Rectangle rect, int seg) {

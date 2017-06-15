@@ -31,6 +31,7 @@ public class ServerProgram {
 
 				for (Network.Character character : characterList) {
 					server.sendToTCP(connection.getID(), character);
+					
 				}
 			}
 
@@ -54,6 +55,7 @@ public class ServerProgram {
 							+ character.x + ", " + character.y);
 					characterList.add(character);
 					server.sendToAllExceptTCP(c.getID(), character);
+					
 				} else if (object instanceof Network.Bullet) {
 					Network.Bullet bullet = (Network.Bullet) object;
 					server.sendToAllExceptTCP(c.getID(), bullet);

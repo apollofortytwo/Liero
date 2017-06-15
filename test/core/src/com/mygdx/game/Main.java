@@ -3,9 +3,7 @@ package com.mygdx.game;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 
 import javax.swing.JOptionPane;
 
@@ -82,7 +80,7 @@ public class Main extends ApplicationAdapter {
 
 		mm = new MapManager(img.getTextureData().consumePixmap(), cam, world);
 
-		player = new Player(64, 0, world);
+		player = new Player(64, 3000 / 32, world);
 
 		cp.sendMyCharacter(player);
 
@@ -91,6 +89,7 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public void update() {
+		System.out.println(player.y);
 		cam.position.set(new Vector2(player.x, player.y), 0);
 		try {
 			Gdx.graphics.setTitle(Inet4Address.getLocalHost().getHostAddress());
@@ -115,9 +114,10 @@ public class Main extends ApplicationAdapter {
 		sr.begin(ShapeRenderer.ShapeType.Filled);
 		sr.rect((player.body.getPosition().x - 2), player.body.getPosition().y - 2, 4, 4);
 
-		for (Network.Character character : cp.characterList) {
+		for(com.mygdx.game.PhysicsCharacter character: cp.characterList){
+			Network.Character character1 = character.character;
 			sr.setColor(Color.WHITE);
-			sr.rect((character.x - 2), character.y - 2, 4, 4);
+			sr.rect((character1.x - 2), character1.y - 2, 4, 4);
 		}
 
 		rh.setCombinedMatrix(matrix);
@@ -149,6 +149,7 @@ public class Main extends ApplicationAdapter {
 		b2dr.render(world, matrix);
 
 		sr.end();
+		mm.render(sr);
 
 	}
 

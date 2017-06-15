@@ -31,6 +31,10 @@ public class Explosion {
 					if (!((UserData)(fixture.getBody().getUserData())).name.equals("Bullet")) {
 						applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) numRays);
 					}
+					if (!((UserData)(fixture.getBody().getUserData())).name.equals("Player")) {
+						applyBlastImpulse(fixture.getBody(), center, point, blastPower / (float) numRays);
+					}
+					
 
 					return 0;
 				}
